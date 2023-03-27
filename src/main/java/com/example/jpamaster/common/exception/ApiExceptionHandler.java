@@ -20,7 +20,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = JpaMasterBadRequest.class)
     public ApiResponse<Void> handler(JpaMasterBadRequest e) {
-        log.error(e.getMessage(), e);
+        log.error("Bad Request: {}", e.getMessage(), e);
         return ApiResponse.createError(e.getHttpStatusCode(), e.getMessage());
     }
 
@@ -28,7 +28,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = JpaMasterNotFoundException.class)
     public ApiResponse<Void> handler(JpaMasterNotFoundException e) {
-        log.error(e.getMessage(), e);
+        log.error("Not Found: {}", e.getMessage(), e);
         return ApiResponse.createError(e.getHttpStatusCode(), e.getMessage());
     }
 
@@ -36,14 +36,14 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = KakaoResException.class)
     public ApiResponse<Void> kakaoErrorHandler(KakaoResException e)
     {
-        log.error(e.getMessage(), e);
+        log.error("Kakao Client Error : {}", e.getMessage(), e);
         return ApiResponse.createError(e.getHttpStatusCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public ApiResponse<Void> handler(Exception e) {
-        log.error(e.getMessage(), e);
+        log.error("Internal Server error: {}", e.getMessage(), e);
         return ApiResponse.createError(
                 HttpStatusCode.INTERNAL_SERVER_ERROR, e.getMessage()
         );
