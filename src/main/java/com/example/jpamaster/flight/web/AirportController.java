@@ -21,20 +21,19 @@ public class AirportController {
     private final AirportService airportService;
 
     @GetMapping
-    public ApiResponse<List<AirportDto>> getAirportBySearchCondition(
+    public List<AirportDto> getAirportBySearchCondition(
         @AuthenticatedPrincipal CustomUserPrincipal customUserPrincipal,
             KeywordSearchConditionDto airportSearchConditionDto
     ) {
-        return ApiResponse.createOk(airportService.getAirportBySearchCondition(airportSearchConditionDto));
+        return airportService.getAirportBySearchCondition(airportSearchConditionDto);
     }
 
     @PostMapping(path = "/{airportSeq}")
-    public ApiResponse<Void> registerAvailableAirline (
+    public void registerAvailableAirline (
             @PathVariable("airportSeq") Long airportSeq,
             @RequestBody  RegisterAvailableAirlineRequestDto dto
     ) {
         airportService.registerAvailableAirline(airportSeq, dto);
-        return ApiResponse.createEmptyBody();
     }
 
 }

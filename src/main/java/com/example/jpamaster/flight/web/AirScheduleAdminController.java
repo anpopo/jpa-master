@@ -22,22 +22,17 @@ public class AirScheduleAdminController {
     private final AirScheduleCreateService airScheduleCreateService;
 
     @PostMapping
-    public ApiResponse<AirScheduleCreateResponseDto> createAirSchedule(
+    public AirScheduleCreateResponseDto createAirSchedule(
         @RequestBody AirScheduleRequestDto dto
     ) {
-        return ApiResponse.createOk(airScheduleCreateService.createAirSchedule(dto));
+        return airScheduleCreateService.createAirSchedule(dto);
     }
 
     @PutMapping("/{airScheduleSeq}")
-    public ApiResponse<AirScheduleCreateResponseDto> updateAirSchedule(
+    public AirScheduleCreateResponseDto updateAirSchedule(
         @PathVariable("airScheduleSeq") Long airScheduleSeq,
         @RequestBody AirScheduleRequestDto dto
     ) {
-        return ApiResponse.createOk(airScheduleCreateService.updateAirSchedule(airScheduleSeq, dto));
-    }
-
-    @PutMapping("/{airScheduleSeq}/air-seat")
-    public ApiResponse<Long> updateAirScheduleSeat() {
-        return null;
+        return airScheduleCreateService.updateAirSchedule(airScheduleSeq, dto);
     }
 }

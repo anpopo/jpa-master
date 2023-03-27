@@ -21,13 +21,13 @@ public class AirScheduleUserController {
     private final AriScheduleService airScheduleService;
 
     @GetMapping
-    public ApiResponse<Slice<AirScheduleSearchResponseDto>> searchAirScheduleByLowerCost(
+    public Slice<AirScheduleSearchResponseDto> searchAirScheduleByLowerCost(
         AirScheduleSearchRequestDto dto) {
 
         if (!dto.personCountValidation()) {
             throw new JpaMasterBadRequest("인원수를 확인해주세요.");
         }
-        return ApiResponse.createOk(airScheduleService.searchAirScheduleByCondition(dto));
+        return airScheduleService.searchAirScheduleByCondition(dto);
     }
 
 }

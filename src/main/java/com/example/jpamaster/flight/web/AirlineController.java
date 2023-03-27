@@ -21,28 +21,26 @@ public class AirlineController {
     private final AirlineService airlineService;
 
     @DeleteMapping("/{airlineSeq}")
-    public ApiResponse<Void> deleteAirline(
+    public void deleteAirline(
             @PathVariable("airlineSeq") Long airlineSeq
     ) {
         airlineService.deleteAirline(airlineSeq);
-        return ApiResponse.createEmptyBody();
     }
 
     @PutMapping("/{airlineSeq}")
-    public ApiResponse<Long> updateAirlineInfo(
+    public Long updateAirlineInfo(
             @PathVariable("airlineSeq") Long airlineSeq,
             @RequestBody AirlineUpdateRequestDto dto,
             @RequestPart(name = "airlineImage", required = false) MultipartFile airlineImage
     ) {
-        return ApiResponse.createOk(airlineService.updateAirlineInfo(airlineSeq, dto, airlineImage));
+        return airlineService.updateAirlineInfo(airlineSeq, dto, airlineImage);
     }
 
     @GetMapping
-    public ApiResponse<Page<AirlineDto>> getAirlineList(
+    public Page<AirlineDto> getAirlineList(
             KeywordSearchConditionDto airlineSearchCondition,
             Pageable pageable
     ) {
-        Page<AirlineDto> pagedAirline = airlineService.getAirlineListByCondition(airlineSearchCondition, pageable);
-        return ApiResponse.createOk(pagedAirline);
+        return airlineService.getAirlineListByCondition(airlineSearchCondition, pageable);
     }
 }
