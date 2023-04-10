@@ -11,6 +11,7 @@ import com.example.jpamaster.flight.enums.FlightEnums.AirlineType;
 import com.example.jpamaster.flight.enums.FlightEnums.DisplayType;
 import com.example.jpamaster.flight.enums.FlightEnums.FoodType;
 import com.example.jpamaster.flight.enums.FlightEnums.SeatType;
+import com.example.jpamaster.flight.web.dto.req.RegisterAvailableAirlineRequestDto;
 import com.example.jpamaster.flight.web.dto.res.AirlineDto;
 import java.util.Arrays;
 import java.util.List;
@@ -120,4 +121,9 @@ public class Fixture {
     public static AirScheduleReservationBucket generateFlightTicketTokenBucket() {
         return AirScheduleReservationBucket.createDefault(400, AirlineType.randomType().getAirlineCostMultipleRate());
     }
+
+    public static RegisterAvailableAirlineRequestDto generateRegisterAvailableAirlineRequestDto() {
+        return new RegisterAvailableAirlineRequestDto(1L, null, null);
+    }
+
 }
