@@ -75,6 +75,6 @@ public class FlightEnums {
         ST9(1.89),
         ;
 
-        private final double defaultCostMultiple;
+        private final double costMultipleRate;
     }
 }

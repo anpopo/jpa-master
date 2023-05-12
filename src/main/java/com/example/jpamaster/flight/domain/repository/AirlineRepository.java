@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface AirlineRepository extends JpaRepository<Airline, Long> {
 
-    @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Airline> findByAirlineIataAndAirlineIcao(String airlineIata, String airlineIcao);
 

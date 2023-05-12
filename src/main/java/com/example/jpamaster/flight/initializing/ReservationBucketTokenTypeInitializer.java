@@ -41,15 +41,13 @@ public class ReservationBucketTokenTypeInitializer implements ApplicationRunner 
 
         reservationBucketTokenTypeRepository.findById(tokenType)
             .ifPresentOrElse(
-                (token) -> {
-                    log.info("token type : {}", token);
-                },
+                (token) -> log.info("token type : {}", token),
                 () -> {
-                    ReservationBucketTokenType reservationBucketTokenType = ReservationBucketTokenType.builder()
-                        .bucketTokenType(tokenType)
-                        .reservationBucketCostMultipleRate(tokenType.getDefaultCostMultiple())
-                        .build();
-
+                    ReservationBucketTokenType reservationBucketTokenType
+                        = ReservationBucketTokenType.builder()
+                                                    .bucketTokenType(tokenType)
+                                                    .reservationBucketCostMultipleRate(tokenType.getCostMultipleRate())
+                                                    .build();
 
                     reservationBucketTokenTypes.add(reservationBucketTokenType);
                     log.info("token type created : {}", reservationBucketTokenType);

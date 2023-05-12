@@ -2,6 +2,7 @@ server:
   port: 8080
   servlet:
     application-display-name: jpa-master
+    context-path: /api
 
 
 spring:
@@ -61,7 +62,7 @@ logging:
 open-api:
   airline:
     request-uri: "http://apis.data.go.kr/B551177/StatusOfSrvAirlines/getServiceAirlineInfo"
-    api-key: "eMnMvGML1ccLs2K4gEVX5m8Ld8HkzUBHdgw2Kzo9tt5J8F8rHhikcX6aUWTvn0FXcOCnWdLpqXv8ZVRVd8G1/w=="
+    api-key: ${airline.service.key}
   kakao:
     request-uri: "https://dapi.kakao.com/v2/local/search/address.json"
 

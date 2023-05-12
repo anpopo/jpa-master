@@ -46,7 +46,7 @@ public class AirScheduleReservationBucket extends BaseEntity {
     private AirScheduleReservationBucket(Integer totalAvailableSeatCount, double airlineCostMultipleRate) {
         this.bucketTokenType = BucketTokenType.DEFAULT;
         this.availableTokenCount = totalAvailableSeatCount / 10;
-        sortReference = new BigDecimal(this.bucketTokenType.getDefaultCostMultiple() * airlineCostMultipleRate)
+        sortReference = new BigDecimal(this.bucketTokenType.getCostMultipleRate() * airlineCostMultipleRate)
             .setScale(3, RoundingMode.HALF_UP)
             .doubleValue();
     }

@@ -21,44 +21,43 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Component
 public class FlightInitializer {
+
+    public static final String AIRPORT_INFO_FILE_PATH = "static/airport/airport_info.csv";
+
     @Value("${open-api.airline.api-key}")
     private String serviceKey;
 
     private final AirlineFeignClient airlineFeignClient;
     private final FlightInitBusiness flightInitBusiness;
 
-    private final AirportRepository airportRepository;
-
-
     @Transactional
     @EventListener(value = ApplicationReadyEvent.class)
     public void airlineInitializeEvent () {
         AirlineInfoVo airlineInfo = airlineFeignClient.fetchAirline(serviceKey, "json");
-        if (airlineInfo != null) {
-            for (AirlineInfoVo.Response.Body.Item item : airlineInfo.getResponse().getBody().getItems()) {
-                flightInitBusiness.airlineInitializing(item);
-            }
+        if (airlineInfo != null && airlineInfo.getResponse() != null && airlineInfo.getResponse().getBody() != null) {
+            airlineInfo.getResponse().getBody().getItems()
+                       .forEach(flightInitBusiness::airlineInitializeUpsert);
         }
     }
 
     @Transactional
     @EventListener(value = ApplicationReadyEvent.class)
     public void airportInitializeEvent () {
-        String filePath = "static/airport/airport_info.csv";
-        ClassPathResource classPathResource = new ClassPathResource(filePath);
+        ClassPathResource classPathResource = new ClassPathResource(AIRPORT_INFO_FILE_PATH);
 
         if(!classPathResource.exists()){
-            log.error("Invalid filePath : {}", filePath);
-        } else {
-            log.info("file path exists = {}", classPathResource.exists());
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(classPathResource.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    flightInitBusiness.airportInitializing(line);
-                }
-            } catch (IOException e) {
-                log.error("[AIRPORT] parseToAirport >> file stream has got an error", e);
+            log.error("Invalid filePath : {}", AIRPORT_INFO_FILE_PATH);
+            return;
+        }
+
+        log.info("file path exists = {}", classPathResource.exists());
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(classPathResource.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                flightInitBusiness.airportInitializing(line);
             }
+        } catch (IOException e) {
+            log.error("[AIRPORT] parseToAirport >> file stream has got an error", e);
         }
     }
 
