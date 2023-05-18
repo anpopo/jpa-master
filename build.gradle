@@ -2,90 +2,90 @@ buildscript {
     ext {
         queryDslVersion = "5.0.0"
     }
-}
 
-plugins {
-    id 'org.springframework.boot' version '2.7.5'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'java'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-}
-// feign client 사용을 위해 버전 명시
-ext {
-    set('springCloudVersion', "2021.0.3")
-}
+    repositories {
+        mavenCentral()
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+    }
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-    implementation 'org.modelmapper:modelmapper:3.1.0'
-    // swagger 설정
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-    // validation
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
-    // queryDsl 의존성 추가
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
-    // feign-client 의존성 추가
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    // redis template
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    // security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'com.nimbusds:nimbus-jose-jwt:9.30.1'
-
-    // test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-}
-// feign client 사용을 위해 spring
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.7.11'
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.15.RELEASE'
+        classpath 'gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10'
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
-// querydsl 사용할 경로 지정합니다. 현재 지정한 부분은 .gitignore에 포함되므로 git에 올라가지 않습니다.
-def querydslDir = "$buildDir/generated/'querydsl'"
+    group 'org.example'
+    version '1.0-SNAPSHOT'
+    sourceCompatibility = '11'
 
-// JPA 사용여부 및 사용 경로 설정
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-
-// build시 사용할 sourceSet 추가 설정
-sourceSets {
-    main.java.srcDir querydslDir
-}
-
-// querydsl 컴파일 시 사용할 옵션 설정
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
-}
-
-// querydsl이 compileClassPath를 상속하도록 설정
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    repositories {
+        mavenCentral()
     }
-    querydsl.extendsFrom compileClasspath
+
+    dependencies {
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.projectlombok:lombok'
+
+        // test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.security:spring-security-test'
+
+        // queryDsl 의존성 추가
+        implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+        implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    ext {
+        set("springCloudVersion", "2021.0.3")
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+
+    // querydsl 사용할 경로 지정합니다. 현재 지정한 부분은 .gitignore에 포함되므로 git에 올라가지 않습니다.
+    def querydslDir = "$buildDir/generated/'querydsl'"
+
+    // JPA 사용여부 및 사용 경로 설정
+    querydsl {
+        jpa = true
+        querydslSourcesDir = querydslDir
+    }
+
+    // build시 사용할 sourceSet 추가 설정
+    sourceSets {
+        main.java.srcDir querydslDir
+    }
+
+    // querydsl 컴파일 시 사용할 옵션 설정
+    compileQuerydsl {
+        options.annotationProcessorPath = configurations.querydsl
+    }
+
+    // querydsl이 compileClassPath를 상속하도록 설정
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+        querydsl.extendsFrom compileClasspath
+    }
 }

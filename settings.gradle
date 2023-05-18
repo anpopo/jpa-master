@@ -1,1 +1,4 @@
 rootProject.name = 'jpa-master'
+include 'common-nolabolae'
+include 'eunji-nolabolae-api'
+include 'sehyeong-nolabolae-api'

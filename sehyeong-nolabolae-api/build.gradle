@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(path: ":common-nolabolae", configuration: 'default')
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.30.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+}

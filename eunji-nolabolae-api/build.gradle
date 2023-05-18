@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(path: ":common-nolabolae", configuration: 'default')
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+}
